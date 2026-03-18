@@ -6,16 +6,19 @@
 #include <memory_resource>
 
 bool sprawdzenieTokena(const std::string& token) {
-    for (char c : token) {
+    for (size_t i = 0; i < token.length(); ++i) {
+        char c = token[i];
+
         if (std::isspace(c)) continue;
-        
-        if (!std::isdigit(c) && 
+
+        if (!std::isdigit(c) &&
             c != '+' && c != '-' && 
-            c != '*' && c != '/' && 
+            c != '*' && c != '/' &&
             c != '(' && c != ')') {
-            std::cerr << "Znaleziono nieprawidlowy symbol: '" << c << "'\n";
-            return false; 
-        }
+            std::cerr << "Znaleziono nieprawidlowy symbol: '" << c
+                      << "' na pozycji: " << i << "\n";
+            return false;
+            }
     }
     return true;
 }
@@ -76,10 +79,20 @@ std::pmr::vector<Token>* DAS(const std::string& text) {
     }
     return tokens;
 }
+std::string usuwanieSpacji(const std::string& input) {
+    std::string result;
+    for (char c : input) {
+        if (!std::isspace(c)) {
+            result += c;
+        }
+    }
+    return result;
+}
 
 int main(){
     std::string text;
-    std::cin >> text;
+    std::getline(std::cin, text);
+    text = usuwanieSpacji(text);
     if (!sprawdzenieTokena(text)) {
         return 1;
     }
