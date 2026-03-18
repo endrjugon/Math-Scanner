@@ -1,18 +1,19 @@
 #include <iostream>
 #include <string>
+#include <utility>
 
 
 class Token {
 protected:
-    char symbol;
+    std::string symbol;
 
 public:
-    Token(char s) : symbol(s) {}
+    explicit Token(std::string s) : symbol(std::move(s)) {}
     virtual ~Token() = default;
 
-    virtual std::string getOpis() const = 0;
+    [[nodiscard]] virtual std::string getOpis() const = 0;
 
-    char getSymbol() const {
+    [[nodiscard]] std::string getSymbol() const {
         return symbol;
     }
 };
