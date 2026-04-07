@@ -2,6 +2,8 @@
 #include <string>
 #include <utility>
 
+const std::string RESET = "\033[0;0m";
+
 class Token
 {
 protected:
@@ -17,5 +19,11 @@ public:
     [[nodiscard]] std::string getSymbol() const
     {
         return symbol;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Token &token)
+    {
+        os << token.getKolor() << token.getSymbol() << RESET;
+        return os;
     }
 };
