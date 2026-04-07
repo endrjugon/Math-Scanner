@@ -2,8 +2,8 @@
 #include <string>
 #include <utility>
 
-
-class Token {
+class Token
+{
 protected:
     std::string symbol;
 
@@ -12,8 +12,10 @@ public:
     virtual ~Token() = default;
 
     [[nodiscard]] virtual std::string getOpis() const = 0;
+    [[nodiscard]] virtual std::string getKolor() const = 0;
 
-    [[nodiscard]] std::string getSymbol() const {
+    [[nodiscard]] std::string getSymbol() const
+    {
         return symbol;
     }
 };

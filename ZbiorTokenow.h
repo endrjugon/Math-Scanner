@@ -2,45 +2,64 @@
 
 #include "Token.h"
 
+const std::string RESET = "\033[0;30m";
+const std::string RED = "\033[0;31m";
+const std::string GREEN = "\033[0;32m";
+const std::string YELLOW = "\033[0;33m";
+const std::string BLUE = "\033[0;34m";
 
-class Liczba : public Token {
+class Liczba : public Token
+{
 public:
     explicit Liczba(std::string s) : Token(std::move(s)) {}
-    std::string getOpis() const override { return std::string("Cyfra");}
+    std::string getOpis() const override { return std::string("Cyfra"); }
+    std::string getKolor() const override { return BLUE; }
 };
 
-class Plus : public Token {
+class Plus : public Token
+{
 public:
     Plus() : Token("+") {}
-    std::string getOpis() const override { return std::string("Znak dodawania");}
+    std::string getOpis() const override { return std::string("Znak dodawania"); }
+    std::string getKolor() const override { return GREEN; }
 };
 
-class Minus : public Token {
+class Minus : public Token
+{
 public:
     Minus() : Token("-") {}
-    std::string getOpis() const override { return std::string("Znak odejmowania");}
+    std::string getOpis() const override { return std::string("Znak odejmowania"); }
+    std::string getKolor() const override { return GREEN; }
 };
 
-class Mnozenie : public Token {
+class Mnozenie : public Token
+{
 public:
-    Mnozenie() : Token("*"){}
-    std::string getOpis() const override {return std::string("Znak mnozenia");}
+    Mnozenie() : Token("*") {}
+    std::string getOpis() const override { return std::string("Znak mnozenia"); }
+    std::string getKolor() const override { return RED; }
 };
 
-class Dzielenie : public Token {
+class Dzielenie : public Token
+{
 public:
-    Dzielenie() : Token("/"){}
-    std::string getOpis() const override {return std::string("Znak dzielenia");}
+    Dzielenie() : Token("/") {}
+    std::string getOpis() const override { return std::string("Znak dzielenia"); }
+    std::string getKolor() const override { return RED; }
 };
 
-class LewyNawias : public Token {
+class LewyNawias : public Token
+{
 public:
     LewyNawias() : Token("(") {}
-    std::string getOpis() const override { return std::string("Nawias otwierajacy");}
+    std::string getOpis() const override { return std::string("Nawias otwierajacy"); }
+    std::string getKolor() const override { return YELLOW; }
 };
 
-class PrawyNawias : public Token {
+class PrawyNawias : public Token
+{
 public:
     PrawyNawias() : Token(")") {}
-    std::string getOpis() const override { return std::string("Nawias zamykajacy");}
+    std::string getOpis() const override { return std::string("Nawias zamykajacy"); }
+    std::string getKolor() const override { return YELLOW; }
 };
