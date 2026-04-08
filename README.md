@@ -2,6 +2,8 @@
 
 ## Ogólne informacje
 
+Skaner został napisany w języku C++.
+
 Token.h ma w sobie abstrakcyjna klasę Token.  
 ZbiorTokenow.h zawiera klasy tokenów dziedziczące po Token:
 
@@ -17,7 +19,7 @@ ZbiorTokenow.h zawiera klasy tokenów dziedziczące po Token:
 W pliku Main.cpp jest główna logika skanera.  
 W Readme.md znajduje się opis projektu
 
-## Instalacja
+## Instalacja (dla systemu Linux)
 
 ```bash
 git clone <...>
