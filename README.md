@@ -2,7 +2,7 @@
 
 ## Ogólne informacje
 
-Skaner został napisany w języku C++.
+Skaner został napisany w języku C++ i przetestowany na systemie Linux.  
 
 Token.h ma w sobie abstrakcyjna klasę Token.  
 ZbiorTokenow.h zawiera klasy tokenów dziedziczące po Token:
