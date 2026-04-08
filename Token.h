@@ -2,7 +2,7 @@
 #include <string>
 #include <utility>
 
-const std::string RESET = "\033[0m\n";
+const std::string RESET = "\033[0m";
 
 class Token
 {
