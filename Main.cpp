@@ -32,167 +32,80 @@ bool sprawdzenieTokena(const std::string &token)
     return true;
 }
 
-std::pmr::vector<std::unique_ptr<Token>> DAS(const std::string &text)
+std::unique_ptr<Token> DAS(std::string &text)
 {
-    std::pmr::vector<std::unique_ptr<Token>> tokens;
-    std::string buffer = "";
-    for (char c : text)
-    {
-        if (std::isspace(c))
-        {
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            continue;
-        }
+    if (text.empty())
+        return nullptr;
 
-        switch (c)
-        {
+    char c = text[0];
+
+    switch (c)
+    {
         case '+':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<Plus>());
-            break;
+            text.erase(0, 1);
+        return std::make_unique<Plus>();
         case '-':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<Minus>());
-            break;
+            text.erase(0, 1);
+        return std::make_unique<Minus>();
         case '*':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<Mnozenie>());
-            break;
+            text.erase(0, 1);
+        return std::make_unique<Mnozenie>();
         case '/':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<Dzielenie>());
-            break;
+            text.erase(0, 1);
+        return std::make_unique<Dzielenie>();
         case '(':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<LewyNawias>());
-            break;
+            text.erase(0, 1);
+        return std::make_unique<LewyNawias>();
         case ')':
-            if (buffer != "")
-            {
-                if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                                { return std::isdigit(c); }))
-                {
-                    tokens.push_back(std::make_unique<Liczba>(buffer));
-                }
-                else
-                {
-                    tokens.push_back(std::make_unique<Identyfikator>(buffer));
-                }
-                buffer = "";
-            }
-            tokens.push_back(std::make_unique<PrawyNawias>());
-            break;
-        default:
-            buffer += c;
-            break;
-        }
+            text.erase(0, 1);
+        return std::make_unique<PrawyNawias>();
     }
-    if (!buffer.empty())
-    {
-        if (std::all_of(buffer.begin(), buffer.end(), [](unsigned char c)
-                        { return std::isdigit(c); }))
-        {
-            tokens.push_back(std::make_unique<Liczba>(buffer));
-        }
-        else
-        {
-            tokens.push_back(std::make_unique<Identyfikator>(buffer));
-        }
-    }
-    return tokens;
-}
 
+    size_t i = 0;
+    while (i < text.size() &&
+           std::string("+-*/()").find(text[i]) == std::string::npos)
+    {
+        ++i;
+    }
+
+    std::string tokenStr = text.substr(0, i);
+    text.erase(0, i);
+
+    if (std::all_of(tokenStr.begin(), tokenStr.end(),
+                    [](unsigned char c)
+                    { return std::isdigit(c); }))
+    {
+        return std::make_unique<Liczba>(tokenStr);
+    }
+    else
+    {
+        return std::make_unique<Identyfikator>(tokenStr);
+    }
+}
 int main()
 {
     std::string text;
     std::getline(std::cin, text);
-
+    std::string buffer = text;
     if (!sprawdzenieTokena(text))
         return 1;
-
-    auto tokens = DAS(text);
+    buffer.erase(
+    std::remove_if(buffer.begin(), buffer.end(),
+                   [](unsigned char c){ return std::isspace(c); }),
+    buffer.end());
+    std::pmr::vector<std::unique_ptr<Token>> tokens;
+    while (!buffer.empty()) {
+        tokens.push_back(DAS(buffer));
+    }
     size_t textIndex = 0;
     for (const auto &token : tokens)
     {
         std::string symbol = token->getSymbol();
         while (textIndex < text.length() && std::isspace(text[textIndex]))
         {
-            std::cout << text[textIndex++];
+            std::cout <<  text[textIndex++];
         }
-        std::cout << *token; // dereference pointer
+        std::cout << *token;
         textIndex += symbol.length();
     }
     return 0;
